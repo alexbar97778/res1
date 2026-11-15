@@ -11,9 +11,7 @@
             box-sizing: border-box;
         }
         html, body {
-            width: 100%;
-            min-height:100vh;
-            background-color: #000;
+            
             
         }
         img {
@@ -26,43 +24,10 @@
     </style>
 </head>
 <body>
-    <a href="p3.html"><img id="responsive-img" src="2a.png"></a>
-    <a href="p4.html"><img id="responsive-img" src="2b.png"></a>
+    <a href="p3.html"><img id="responsive-img" src="2b.png"></a>
+    <a href="p4.html"><img id="responsive-img" src="2a.png"></a>
     <script>
-        function resizeMap() {
-            const img = document.getElementById('responsive-img');
-            const areas = document.querySelectorAll('map[name="pos"] area');
-            if (!img.naturalWidth) return;
-
-            const imgRatio = img.naturalWidth / img.naturalHeight;
-            const winRatio = window.innerWidth / window.innerHeight;
-            let renderWidth, renderHeight;
-
-            if (winRatio > imgRatio) {
-                renderHeight = window.innerHeight;
-                renderWidth = renderHeight * imgRatio;
-            } else {
-                renderWidth = window.innerWidth;
-                renderHeight = renderWidth / imgRatio;
-            }
-
-            const scaleX = renderWidth / img.naturalWidth;
-            const scaleY = renderHeight / img.naturalHeight;
-
-            areas.forEach(area => {
-                if (!area.dataset.origCoords) {
-                    area.dataset.origCoords = area.getAttribute('coords');
-                }
-                const orig = area.dataset.origCoords.split(',').map(Number);
-                const scaled = orig.map((val, index) => {
-                    return Math.round(val * (index % 2 === 0 ? scaleX : scaleY));
-                });
-                area.setAttribute('coords', scaled.join(','));
-            });
-        }
-
-        window.addEventListener('load', resizeMap);
-        window.addEventListener('resize', resizeMap);
+        
     </script>
 </body>
 </html>
