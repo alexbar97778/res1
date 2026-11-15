@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Головна</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        img {
+            width: 100vw;
+            height: 100vh;
+            object-fit: contain; /* Зберігає пропорції, щоб нічого не обрізалося */
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <img id="responsive-img" src="1.png" alt="1.jpeg" usemap="#pos">
+    <map name="pos">
+        <area shape="circle" coords="2900,1800,90" href="p2.html" alt="2.jpeg">
+    </map>
+
+    <script>
+        function resizeMap() {
+            const img = document.getElementById('responsive-img');
+            const areas = document.querySelectorAll('map[name="pos"] area');
+            if (!img.naturalWidth) return;
+
+            // Обчислюємо реальні розміри картинки всередині контейнера object-fit: contain
+            const imgRatio = img.naturalWidth / img.naturalHeight;
+            const winRatio = window.innerWidth / window.innerHeight;
+            let renderWidth, renderHeight;
+
+            if (winRatio > imgRatio) {
+                renderHeight = window.innerHeight;
+                renderWidth = renderHeight * imgRatio;
+            } else {
+                renderWidth = window.innerWidth;
+                renderHeight = renderWidth / imgRatio;
+            }
+
+            const scaleX = renderWidth / img.naturalWidth;
+            const scaleY = renderHeight / img.naturalHeight;
+
+            areas.forEach(area => {
+                if (!area.dataset.origCoords) {
+                    area.dataset.origCoords = area.getAttribute('coords');
+                }
+                const orig = area.dataset.origCoords.split(',').map(Number);
+                const scaled = orig.map((val, index) => {
+                    // Для кола: [x, y, radius]
+                    if (index === 2) return Math.round(val * Math.min(scaleX, scaleY));
+                    return Math.round(val * (index % 2 === 0 ? scaleX : scaleY));
+                });
+                area.setAttribute('coords', scaled.join(','));
+            });
+        }
+
+        window.addEventListener('load', resizeMap);
+        window.addEventListener('resize', resizeMap);
+    </script>
+</body>
+</html>
